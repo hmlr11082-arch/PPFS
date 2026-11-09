@@ -1486,16 +1486,24 @@
           </div>
         </div>
 
-        <!-- กราฟแท่งผสม 1: รายเดือน (ตั้งลูกหนี้ vs เงินชดเชย + เส้นส่วนต่างสะสม) -->
+        <!-- กราฟแท่งผสม 1: รายเดือน (ตั้งลูกหนี้ vs เงินชดเชย + เส้นส่วนต่างสะสมแตะหัวเสากราฟ) -->
         <div class="surface-card chart-span-7" id="cardChartMonthlyMixed">
-          <div class="chart-card-header">
+          <div class="chart-card-header" style="flex-wrap:wrap;">
             <div>
               <h3 class="chart-card-title">เปรียบเทียบยอดตั้งลูกหนี้ เงินชดเชย และส่วนต่างสะสมรายเดือน</h3>
-              <p class="chart-card-subtitle">แท่งแสดงยอดรายเดือน (พ.ศ.) และเส้นแสดงส่วนต่างสะสม คลิกแท่งเพื่อกรองเดือน</p>
+              <p class="chart-card-subtitle">กราฟเส้นแตะชิดที่หัวเสากราฟรายเดือนพร้อมป้ายกำกับส่วนต่างสะสม (คลิกแท่งเพื่อกรองเดือน)</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.4rem;">
+              <select id="monthlyChartScaleSelect" class="select-field" style="min-height:36px;padding:0.25rem 0.65rem;font-size:0.78rem;" aria-label="ปรับโหมดสเกลกราฟแท่งและกราฟเส้น">
+                <option value="dual" selected>เส้นแตะหัวเสากราฟ (ป้ายส่วนต่างสะสม)</option>
+                <option value="monthly_diff">เส้นแตะหัวเสากราฟ (ป้ายส่วนต่างรายเดือน)</option>
+                <option value="free_dual">แยกอิสระ 2 แกน (เส้นลอยตามสเกลสะสม)</option>
+                <option value="single">แกนเดียว (สเกลร่วม)</option>
+              </select>
             </div>
           </div>
           <div class="chart-scroll-x">
-            <div class="chart-canvas-wrap">
+            <div class="chart-canvas-wrap" style="height:310px;">
               <canvas id="chartMonthlyMixed"></canvas>
             </div>
           </div>
@@ -1605,7 +1613,7 @@
         <div class="guide-grid">
           <div style="background:var(--pink-50);border:1px solid var(--pink-200);border-radius:16px;padding:1.1rem;">
             <h4 style="font-size:0.95rem;color:var(--pink-900);margin-bottom:0.65rem;">1. ความถี่การดึงข้อมูลอัตโนมัติ (Near Real-time Sync)</h4>
-            <label for="pollIntervalSelect" style="display:block;font-size:0.85rem;color:var(--muted);margin-bottom:0.4rem;">ดึงข้อมูลใหม่เฉพาะเมื่อเปิดแท็บเบราว์เซอร์อยู่:</label>
+            <label for="pollIntervalSelect" style="display:block;font-size:0.85rem;color:var(--muted);margin-bottom:0.4rem;">ดึงข้อมูลและตรวจจับการเพิ่ม/ลบแท็บชีตอัตโนมัติ:</label>
             <select id="pollIntervalSelect" class="select-field" style="width:100%;">
               <option value="5000">ทุก 5 วินาที (เร็วมาก)</option>
               <option value="10000" selected>ทุก 10 วินาที (ค่าเริ่มต้นแนะนำ)</option>
@@ -1621,11 +1629,11 @@
           </div>
 
           <div style="background:var(--pink-50);border:1px solid var(--pink-200);border-radius:16px;padding:1.1rem;">
-            <h4 style="font-size:0.95rem;color:var(--pink-900);margin-bottom:0.65rem;">2. เพิ่มแท็บชีตใหม่เพื่อเชื่อมต่อทันที</h4>
-            <p style="font-size:0.84rem;color:var(--muted);margin-bottom:0.5rem;">หากใน Google Sheet มีการเพิ่มแท็บใหม่ สามารถพิมพ์ชื่อแท็บเพื่อดึงข้อมูลได้ทันที:</p>
+            <h4 style="font-size:0.95rem;color:var(--pink-900);margin-bottom:0.65rem;">2. ซิงค์รายชื่อแท็บจาก Google Sheet ต้นทาง</h4>
+            <p style="font-size:0.84rem;color:var(--muted);margin-bottom:0.5rem;">ระบบตรวจจับการเพิ่ม/ลบ Sheet จาก Google Sheet ต้นทางให้อัตโนมัติ หรือกดซิงค์/เพิ่มชื่อแท็บเองได้ทันที:</p>
             <div style="display:flex;gap:0.5rem;">
-              <input type="text" id="newTabNameInput" class="input-field" placeholder="เช่น คัดกรองมะเร็งปากมดลูก" style="flex:1;" />
-              <button type="button" class="btn-action primary-pink" id="btnAddCustomTab">เพิ่มแท็บ</button>
+              <input type="text" id="newTabNameInput" class="input-field" placeholder="พิมพ์ชื่อแท็บ หรือกดซิงค์ชีต..." style="flex:1;" />
+              <button type="button" class="btn-action primary-pink" id="btnAddCustomTab">เพิ่ม/ซิงค์แท็บ</button>
             </div>
           </div>
 
@@ -1644,8 +1652,8 @@
           <div class="flow-diagram-grid">
             <div class="flow-step-card">
               <div class="flow-step-num">STEP 01 · เริ่มต้นระบบ</div>
-              <div class="flow-step-title">เปิดเว็บ & Skeleton Loading</div>
-              <div class="flow-step-desc">ตรวจสอบโหมดหน้าจอ (Mobile/Desktop) แสดง Skeleton สีชมพูอ่อน และเรียกข้อมูล CSV จาก Google Sheets ผ่าน gviz endpoint</div>
+              <div class="flow-step-title">ค้นหาแท็บชีต & Skeleton Loading</div>
+              <div class="flow-step-desc">ซิงค์รายชื่อ Sheet ทั้งหมดจาก Google Sheets ต้นทางอัตโนมัติ (รองรับการเพิ่ม/ลบแท็บใหม่) และดึงข้อมูล CSV ผ่าน gviz endpoint</div>
             </div>
             <div class="flow-step-card">
               <div class="flow-step-num">STEP 02 · ประมวลผลฉลาด</div>
@@ -1655,12 +1663,12 @@
             <div class="flow-step-card">
               <div class="flow-step-num">STEP 03 · แสดงผลวิเคราะห์</div>
               <div class="flow-step-title">คำนวณ KPI, กราฟ & สรุปผู้บริหาร</div>
-              <div class="flow-step-desc">วาด KPI 6 ใบ, กราฟวงกลม 2 ใบ, กราฟผสมรายเดือน, กราฟ Top 5 และสร้าง Executive Summary รองรับการคลิกกรองข้ามส่วน (Cross-filter)</div>
+              <div class="flow-step-desc">วาด KPI 6 ใบ, กราฟวงกลม 2 ใบ, กราฟผสมรายเดือน (เส้นแตะหัวเสากราฟ), กราฟ Top 5 และสร้าง Executive Summary</div>
             </div>
             <div class="flow-step-card">
               <div class="flow-step-num">STEP 04 · ซิงค์เรียลไทม์</div>
               <div class="flow-step-title">Poll ทุก 10 วินาที & ตรวจจับ Diff</div>
-              <div class="flow-step-desc">เปรียบเทียบ Hash และตรวจสอบรายแถวด้วย VN/HN+วันที่ เมื่อเปลี่ยนจะอัปเดตกราฟนุ่มนวล แสดง Toast และไฮไลต์แถว 3 วินาที</div>
+              <div class="flow-step-desc">ตรวจจับทั้งการเพิ่ม/ลบแท็บชีต และการแก้ไขข้อมูลรายแถว เมื่อเปลี่ยนจะอัปเดตกราฟนุ่มนวล แสดง Toast และไฮไลต์แถว 3 วินาที</div>
             </div>
           </div>
         </div>
@@ -1687,12 +1695,12 @@
           </div>
 
           <div style="border:1px solid var(--pink-200);border-radius:16px;padding:1.1rem;background:var(--white);">
-            <h4 style="color:var(--pink-900);margin-bottom:0.4rem;">(ค) วิธีเพิ่มแท็บใหม่ใน CONFIG ถาวร</h4>
-            <p style="font-size:0.88rem;color:var(--text);">เปิดไฟล์ <code>index.html</code> ด้วยโปรแกรมแก้ไขข้อความ (เช่น Notepad หรือ VS Code) แล้วเพิ่มชื่อแท็บในส่วน <code>CONFIG.SHEETS</code> ด้านบนสุดของสคริปต์:</p>
+            <h4 style="color:var(--pink-900);margin-bottom:0.4rem;">(ค) ระบบตรวจจับการเพิ่ม/ลบแท็บอัตโนมัติ</h4>
+            <p style="font-size:0.88rem;color:var(--text);">เมื่อผู้ดูแลเพิ่มหรือลบ Sheet ในไฟล์ Google Sheets ต้นทาง ระบบจะดึงรายชื่อแท็บทั้งหมดจาก <code>/htmlview</code> อัตโนมัติและสร้างหน้า Dashboard ของแท็บใหม่ให้ทันทีโดยไม่ต้องแก้โค้ด:</p>
             <pre class="code-snippet">SHEETS: [
-  { name: 'เคลือบฟลูออไรด์', gid: 0 },
-  { name: 'Telamed' },
-  { name: 'ชื่อแท็บบริการใหม่' }
+  { name: 'เคลือบฟลูออไรด์', gid: '0' },
+  { name: 'Telamed', gid: '1434034871' },
+  ... // ซิงค์อัตโนมัติจาก Google Sheet ต้นทาง
 ]</pre>
           </div>
         </div>
@@ -1726,7 +1734,7 @@
 
   <script>
     /* =========================================================================
-       1. CONFIG (ตั้งค่าระบบและรายชื่อแท็บ Google Sheets)
+       1. CONFIG (ตั้งค่าระบบและรายชื่อแท็บ Google Sheets พร้อมซิงค์อัตโนมัติ)
        ========================================================================= */
     const CONFIG = {
       HOSPITAL_NAME: 'โรงพยาบาลท่าคันโท',
@@ -1735,14 +1743,16 @@
       POLL_INTERVAL: 10000, // ดึงข้อมูลอัตโนมัติทุก 10,000 ms (10 วินาที)
       MAX_BACKOFF: 60000,   // กรณีเชื่อมต่อล้มเหลว retry สูงสุดไม่เกิน 60 วินาที
       SHEETS: [
-        { name: 'เคลือบฟลูออไรด์', gid: 0 },
-        { name: 'Telamed' },
-        { name: 'ตรวจหลังคลอด' },
-        { name: 'ยาเม็ดเสริมธาตุเหล็ก' },
-        { name: 'ANC' },
-        { name: 'คัดกรอง CBC' },
-        { name: 'ยาสมุนไพร 32 รายการ' },
-        { name: 'มะเร็งลำไส้ FiF-test' }
+        { name: 'เคลือบฟลูออไรด์', gid: '0' },
+        { name: 'Telamed', gid: '1434034871' },
+        { name: 'ตรวจหลังคลอด', gid: '1728208692' },
+        { name: 'คัดกรอง CBC', gid: '1494306237' },
+        { name: 'ยาเม็ดเสริมธาตุเหล็ก', gid: '1508229044' },
+        { name: 'ANC', gid: '1816086609' },
+        { name: 'มะเร็งลำไส้ FiF-test', gid: '317775098' },
+        { name: 'ยาสมุนไพร 32 รายการ', gid: '1494192990' },
+        { name: 'ไม่ประสงค์เบิก', gid: '1358545512' },
+        { name: 'ตรวจผ่านชดเชยเป็น 0 บาท', gid: '73405916' }
       ],
       THAI_MONTHS: [
         'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
@@ -2035,13 +2045,21 @@
         normalizedHeaders.forEach(({ index, label }) => {
           const u = label.toUpperCase();
           if (columnMap.seq === -1 && (label === 'ลำดับ' || label.includes('ลำดับที่'))) columnMap.seq = index;
-          else if (columnMap.status === -1 && label.includes('สถานะ')) columnMap.status = index;
+          else if (columnMap.note === -1 && (label.includes('หมายเหตุ') || label.includes('เหตุผล') || label.includes('สาเหตุ'))) columnMap.note = index;
+          else if (columnMap.status === -1 && (label.includes('สถานะ') || label.includes('กองทุน') || label.includes('สิทธิ์'))) columnMap.status = index;
           else if (columnMap.vn === -1 && (u === 'VN' || u.includes('VN'))) columnMap.vn = index;
           else if (columnMap.hn === -1 && (u === 'HN' || u.includes('HN'))) columnMap.hn = index;
           else if (columnMap.name === -1 && label.includes('ชื่อ')) columnMap.name = index;
           else if (columnMap.payDate === -1 && label.includes('วันที่รับชำระ')) columnMap.payDate = index;
           else if (columnMap.date === -1 && (label.includes('วันที่รับบริการ') || label.includes('วันที่'))) columnMap.date = index;
-          else if (columnMap.debit === -1 && (label.includes('ตั้งลูกหนี้') || (label.includes('ลูกหนี้') && !label.includes('ตัด')))) columnMap.debit = index;
+          else if (
+            columnMap.debit === -1 &&
+            (label.includes('ตั้งลูกหนี้') ||
+              (label.includes('ลูกหนี้') && !label.includes('ตัด')) ||
+              label.includes('ค่าใช้จ่าย') ||
+              label.includes('ค่าใช้้จ่าย') ||
+              label.includes('ค่าบริการ'))
+          ) columnMap.debit = index;
           else if (columnMap.credit === -1 && label.includes('ตัดลูกหนี้')) columnMap.credit = index;
           else if (columnMap.comp === -1 && (label.includes('เงินชดเชย') || label.includes('ชดเชย'))) columnMap.comp = index;
           else if (columnMap.diff === -1 && label.includes('ส่วนต่าง')) columnMap.diff = index;
@@ -2049,7 +2067,6 @@
           else if (columnMap.receipt === -1 && label.includes('ใบเสร็จ')) columnMap.receipt = index;
           else if (columnMap.period === -1 && label.includes('งวด')) columnMap.period = index;
           else if (columnMap.rep === -1 && u.includes('REP')) columnMap.rep = index;
-          else if (columnMap.note === -1 && label.includes('หมายเหตุ')) columnMap.note = index;
         });
 
         // 4) แปลงแถวข้อมูลและตัดแถวว่างที่ไม่มีทั้ง HN และชื่อผู้ป่วยออก
@@ -2078,10 +2095,10 @@
           const debit = Utils.parseNumber(debitRaw);
           const credit = Utils.parseNumber(creditRaw);
           const comp = Utils.parseNumber(compRaw);
-          // หากคอลัมน์ส่วนต่างมีค่า ใช้ค่านั้น ถ้าว่างแต่มีตั้งลูกหนี้และชดเชย ให้คำนวณ comp - debit
+          // หากคอลัมน์ส่วนต่างมีค่า ใช้ค่านั้น ถ้าว่างแต่มีตั้งลูกหนี้หรือชดเชย ให้คำนวณ comp - debit
           const diff = (diffRaw !== '' && diffRaw !== undefined)
             ? Utils.parseNumber(diffRaw)
-            : (compRaw !== '' ? comp - debit : 0);
+            : ((compRaw !== '' || columnMap.comp === -1) ? comp - debit : 0);
 
           const statusRaw = columnMap.status !== -1 ? String(row[columnMap.status] || '').trim() : '';
           const noteRaw = columnMap.note !== -1 ? String(row[columnMap.note] || '').trim() : '';
@@ -2169,6 +2186,7 @@
       sortAsc: true,
       currentPage: 1,
       pageSize: 25,
+      monthlyScaleMode: 'dual', // 'dual' (เส้นแตะหัวเสา+สะสม) | 'monthly_diff' | 'free_dual' | 'single'
 
       // อินสแตนซ์ของ Chart.js
       charts: {
@@ -2383,8 +2401,118 @@
       }
     };
 
+    // ปลั๊กอินแสดงตัวเลขค่าจริงบนยอดกราฟแท่งและจุดกราฟเส้น เพื่อให้อ่านค่าเทียบความสูงได้ชัดเจน
+    const BarLineValuePlugin = {
+      id: 'barLineValuePlugin',
+      afterDatasetsDraw(chart) {
+        if (chart.config.type === 'doughnut') return;
+        const showLabels = chart.options.plugins?.valueLabels?.enabled;
+        if (!showLabels) return;
+
+        const { ctx, chartArea } = chart;
+        if (!chartArea) return;
+        const isHorizontal = chart.options.indexAxis === 'y';
+
+        ctx.save();
+        if (isHorizontal) {
+          // สำหรับกราฟแท่งแนวนอน Top 5
+          const meta = chart.getDatasetMeta(0);
+          const data = chart.data.datasets[0].data || [];
+          ctx.font = '600 11.5px Prompt, sans-serif';
+          ctx.fillStyle = '#3B1D2E';
+          ctx.textBaseline = 'middle';
+
+          meta.data.forEach((bar, i) => {
+            const val = Number(data[i]) || 0;
+            const prefix = val > 0 && chart.data.datasets[0].label?.includes('ส่วนต่าง') ? '+' : '';
+            const labelText = `${prefix}${val.toLocaleString('th-TH', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ฿`;
+            const pos = bar.tooltipPosition();
+            const isNeg = val < 0;
+            ctx.textAlign = isNeg ? 'right' : 'left';
+            const xPos = isNeg ? Math.max(chartArea.left + 4, pos.x - 6) : Math.min(chartArea.right - 4, pos.x + 6);
+            ctx.fillText(labelText, xPos, pos.y);
+          });
+        } else {
+          // สำหรับกราฟผสมรายเดือน (แสดงค่าบนแท่งและป้ายส่วนต่างบนจุดของเส้นที่แตะหัวเสากราฟ)
+          const numPoints = (chart.data.labels || []).length;
+          if (numPoints > 16) {
+            ctx.restore();
+            return;
+          }
+
+          const lineDataset = chart.data.datasets[2] || {};
+          const isBarHeadAnchored = Boolean(lineDataset.isBarHeadAnchored);
+          const lineDisplayValues = lineDataset.displayValues || lineDataset.data || [];
+          const lineBoxes = [];
+
+          // 1. วาดป้ายตัวเลขของกราฟเส้น (dataset index 2)
+          const lineMeta = chart.getDatasetMeta(2);
+          if (lineMeta && !lineMeta.hidden) {
+            ctx.font = '600 10.5px Prompt, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+
+            lineMeta.data.forEach((pt, i) => {
+              const val = Number(lineDisplayValues[i]);
+              if (!isFinite(val)) return;
+              const isNeg = val < 0;
+              const text = (val > 0 ? '+' : '') + Math.round(val).toLocaleString('th-TH');
+              const x = pt.x;
+              // หากเส้นแตะชิดหัวเสากราฟ ให้วางป้ายส่วนต่างลอยอยู่เหนือตัวเลขหัวเสาเล็กน้อยเพื่อไม่ให้บังกัน
+              const yOffset = isBarHeadAnchored ? 16 : 7;
+              const y = Math.max(chartArea.top + 14, Math.min(chartArea.bottom - 4, pt.y - yOffset));
+
+              const textW = ctx.measureText(text).width + 8;
+              const boxH = 15;
+              ctx.fillStyle = isNeg ? 'rgba(254, 242, 242, 0.94)' : 'rgba(255, 241, 247, 0.92)';
+              ctx.strokeStyle = isNeg ? 'rgba(185, 28, 28, 0.45)' : 'rgba(157, 23, 77, 0.35)';
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.roundRect(x - textW / 2, y - boxH + 2, textW, boxH, 4);
+              ctx.fill();
+              ctx.stroke();
+
+              ctx.fillStyle = isNeg ? '#B91C1C' : '#9D174D';
+              ctx.fillText(text, x, y);
+              lineBoxes.push({ x1: x - textW / 2 - 2, x2: x + textW / 2 + 2, y1: y - boxH, y2: y + 3 });
+            });
+          }
+
+          // 2. วาดตัวเลขยอดแท่งรายเดือนบนหัวเสา
+          [0, 1].forEach(dsIdx => {
+            const barMeta = chart.getDatasetMeta(dsIdx);
+            const barData = chart.data.datasets[dsIdx]?.data || [];
+            if (!barMeta || barMeta.hidden) return;
+
+            ctx.font = '500 10px Prompt, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+
+            barMeta.data.forEach((bar, i) => {
+              const val = Number(barData[i]) || 0;
+              if (val <= 0) return;
+              const text = Math.round(val).toLocaleString('th-TH');
+              const x = bar.x;
+              const y = Math.max(chartArea.top + 11, bar.y - 2);
+              const w = ctx.measureText(text).width;
+
+              // ตรวจสอบไม่ให้ทับกับป้ายของเส้น
+              const overlapsLine = !isBarHeadAnchored && lineBoxes.some(b =>
+                x + w / 2 > b.x1 && x - w / 2 < b.x2 && y > b.y1 && y - 11 < b.y2
+              );
+              if (!overlapsLine) {
+                ctx.fillStyle = dsIdx === 0 ? '#6D28D9' : '#BE185D';
+                ctx.fillText(text, x, y);
+              }
+            });
+          });
+        }
+        ctx.restore();
+      }
+    };
+
     if (window.Chart) {
-      Chart.register(CenterTextPlugin);
+      Chart.register(CenterTextPlugin, BarLineValuePlugin);
       Chart.defaults.font.family = "'Sarabun', sans-serif";
       Chart.defaults.color = '#3B1D2E';
     }
@@ -2393,7 +2521,8 @@
       if (!window.Chart) return;
 
       const isMobile = AppState.layoutMode === 'mobile';
-      const legendPos = isMobile ? 'bottom' : 'right';
+      const legendPos = isMobile ? 'right' : 'right';
+      const doughnutLegendPos = isMobile ? 'bottom' : 'right';
 
       // -----------------------------------------------------------------
       // 1) ข้อมูลกราฟวงกลมที่ 1: สัดส่วนตามสถานะ/หมายเหตุ
@@ -2411,7 +2540,7 @@
         const ch = AppState.charts.statusDoughnut;
         ch.data.labels = statusLabels;
         ch.data.datasets[0].data = statusValues;
-        ch.options.plugins.legend.position = legendPos;
+        ch.options.plugins.legend.position = doughnutLegendPos;
         ch.options.plugins.centerText = {
           title: `${Utils.formatInt(records.length)}`,
           subtitle: 'รายการทั้งหมด'
@@ -2445,7 +2574,7 @@
             },
             plugins: {
               legend: {
-                position: legendPos,
+                position: doughnutLegendPos,
                 labels: { boxWidth: 12, padding: 12, font: { size: 12 } }
               },
               centerText: {
@@ -2482,8 +2611,11 @@
       const sortedMonths = Array.from(monthlyAgg.values()).sort((a, b) => a.monthKey.localeCompare(b.monthKey));
       const monthLabels = sortedMonths.map(m => m.monthLabel);
       const monthCounts = sortedMonths.map(m => m.count);
-      const monthDebits = sortedMonths.map(m => m.debit);
-      const monthComps = sortedMonths.map(m => m.comp);
+      const monthDebits = sortedMonths.map(m => Number(m.debit.toFixed(2)));
+      const monthComps = sortedMonths.map(m => Number(m.comp.toFixed(2)));
+      const monthDiffs = sortedMonths.map(m => Number(m.diff.toFixed(2)));
+      // ความสูงหัวเสากราฟของแต่ละเดือน (เพื่อให้จุดของกราฟเส้นแตะชิดที่หัวเสากราฟพอดี)
+      const monthBarHeads = sortedMonths.map(m => Number(Math.max(m.debit, m.comp, 0).toFixed(2)));
 
       let runningCumDiff = 0;
       const monthCumDiffs = sortedMonths.map(m => {
@@ -2492,19 +2624,164 @@
       });
 
       // -----------------------------------------------------------------
-      // 3) กราฟผสมรายเดือน (Grouped Bar: ตั้งลูกหนี้ vs เงินชดเชย + Line: ส่วนต่างสะสม)
+      // 3) กราฟผสมรายเดือน (Grouped Bar: ตั้งลูกหนี้ vs เงินชดเชย + Line: แตะชิดหัวเสากราฟ)
       // -----------------------------------------------------------------
       const ctxMonthly = document.getElementById('chartMonthlyMixed').getContext('2d');
-      const pinkGrad = ctxMonthly.createLinearGradient(0, 0, 0, 260);
+      const pinkGrad = ctxMonthly.createLinearGradient(0, 0, 0, 290);
       pinkGrad.addColorStop(0, '#EC4899');
-      pinkGrad.addColorStop(1, '#F9A8D4');
+      pinkGrad.addColorStop(1, '#F472B6');
+
+      const violetGrad = ctxMonthly.createLinearGradient(0, 0, 0, 290);
+      violetGrad.addColorStop(0, '#A78BFA');
+      violetGrad.addColorStop(1, '#C4B5FD');
+
+      const scaleMode = AppState.monthlyScaleMode || 'dual';
+      const isMonthlyDiffMode = scaleMode === 'monthly_diff';
+      const isSingleAxisMode = scaleMode === 'single';
+      // โหมดเริ่มต้น ('dual' และ 'monthly_diff'): กราฟเส้นจะแตะชิดที่หัวของเสากราฟในแต่ละเดือน
+      const isBarHeadAnchored = (scaleMode === 'dual' || scaleMode === 'monthly_diff');
+
+      const lineActualValues = isMonthlyDiffMode ? monthDiffs : monthCumDiffs;
+      const linePlottedValues = isBarHeadAnchored ? monthBarHeads : lineActualValues;
+      const lineDatasetLabel = isMonthlyDiffMode ? 'ส่วนต่างประจำเดือน (บาท)' : 'ส่วนต่างสะสม (บาท)';
+      const lineAxisId = (isBarHeadAnchored || isSingleAxisMode) ? 'y' : 'y1';
+
+      // คำนวณเพดานแกนซ้าย (y) และแกนขวา (y1) โดยเพิ่มระยะห่างด้านบน (Top Padding)
+      // อย่างน้อย 24% (> 20%) จากจุดข้อมูลสูงสุดเสมอ เพื่อไม่ให้ป้ายตัวเลขชนขอบด้านบนของพื้นที่วาดกราฟ
+      const MIN_TOP_PADDING_RATIO = 0.24;
+      const maxBarVal = Math.max(...monthDebits, ...monthComps, 100);
+      const maxLineVal = Math.max(...lineActualValues, 0);
+      const minLineVal = Math.min(...lineActualValues, 0);
+      const absMinLine = Math.abs(minLineVal);
+
+      const roundStep = (val, step = 50) => Math.ceil(Math.max(val, step) / step) * step;
+
+      // 1) คำนวณสเกลแกนซ้าย (y - กราฟแท่ง และเส้นที่แตะหัวเสากราฟ)
+      let ySuggestedMin = 0;
+      let ySuggestedMax = roundStep(maxBarVal * (1 + MIN_TOP_PADDING_RATIO), 50);
+
+      if (isSingleAxisMode) {
+        const combinedMax = Math.max(maxBarVal, maxLineVal, 100);
+        if (minLineVal < 0) {
+          const baseMax = combinedMax * (1 + MIN_TOP_PADDING_RATIO);
+          ySuggestedMin = -roundStep(Math.max(absMinLine * 1.25, baseMax * 0.22), 50);
+          const totalActiveSpan = combinedMax + Math.abs(ySuggestedMin);
+          ySuggestedMax = roundStep(Math.max(baseMax, combinedMax + totalActiveSpan * MIN_TOP_PADDING_RATIO), 50);
+        } else {
+          ySuggestedMax = roundStep(combinedMax * (1 + MIN_TOP_PADDING_RATIO), 50);
+        }
+      }
+
+      // 2) คำนวณสเกลแกนขวา (y1 - กราฟเส้นสะสม/ส่วนต่าง) ให้สมดุลกับแกน y และมีระยะห่างด้านบน >= 20% เสมอ
+      let y1SuggestedMax;
+      let y1SuggestedMin;
+
+      if (minLineVal < 0 && maxLineVal <= 0) {
+        y1SuggestedMin = -roundStep(absMinLine * 1.25, 50);
+        const negSpan = Math.abs(y1SuggestedMin);
+        y1SuggestedMax = roundStep(Math.max(negSpan * 0.28, 100), 50);
+      } else if (minLineVal < 0 && maxLineVal > 0) {
+        const dominantSpan = Math.max(maxLineVal, absMinLine, 100);
+        y1SuggestedMin = -roundStep(Math.max(absMinLine * 1.25, dominantSpan * 0.24), 50);
+        const totalLineSpan = maxLineVal + Math.abs(y1SuggestedMin);
+        y1SuggestedMax = roundStep(
+          Math.max(
+            maxLineVal * (1 + MIN_TOP_PADDING_RATIO),
+            maxLineVal + totalLineSpan * MIN_TOP_PADDING_RATIO,
+            dominantSpan * 0.28
+          ),
+          50
+        );
+      } else if (maxLineVal > 0) {
+        y1SuggestedMin = 0;
+        y1SuggestedMax = roundStep(maxLineVal * 1.32, 50);
+      } else {
+        y1SuggestedMin = 0;
+        y1SuggestedMax = roundStep(maxBarVal * 0.5, 50);
+      }
+
+      const monthlyScalesConfig = {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 11.5 } }
+        },
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          beginAtZero: ySuggestedMin >= 0,
+          min: ySuggestedMin,
+          max: ySuggestedMax,
+          suggestedMax: ySuggestedMax,
+          grace: '5%',
+          title: {
+            display: !isMobile,
+            text: 'ยอดตั้งลูกหนี้ / เงินชดเชยรายเดือน (บาท)',
+            color: '#6B4C5B',
+            font: { size: 11, weight: '600' }
+          },
+          grid: { color: 'rgba(244, 114, 182, 0.15)' },
+          ticks: {
+            callback: val => Number(val).toLocaleString('th-TH')
+          }
+        },
+        y1: {
+          type: 'linear',
+          display: !isSingleAxisMode,
+          position: 'right',
+          beginAtZero: y1SuggestedMin >= 0,
+          min: y1SuggestedMin,
+          max: y1SuggestedMax,
+          suggestedMax: y1SuggestedMax,
+          grace: '5%',
+          title: {
+            display: !isMobile && !isSingleAxisMode,
+            text: lineDatasetLabel,
+            color: '#9D174D',
+            font: { size: 11, weight: '600' }
+          },
+          grid: {
+            drawOnChartArea: y1SuggestedMin < 0 && !isBarHeadAnchored,
+            color: ctx => (ctx.tick && ctx.tick.value === 0 ? 'rgba(157, 23, 77, 0.32)' : 'transparent'),
+            lineWidth: ctx => (ctx.tick && ctx.tick.value === 0 ? 1.25 : 0)
+          },
+          ticks: {
+            color: ctx => (ctx.tick && ctx.tick.value < 0 ? '#B91C1C' : '#9D174D'),
+            callback: val => (val > 0 ? '+' : '') + Number(val).toLocaleString('th-TH')
+          }
+        }
+      };
 
       if (AppState.charts.monthlyMixed) {
         const ch = AppState.charts.monthlyMixed;
         ch.data.labels = monthLabels;
         ch.data.datasets[0].data = monthDebits;
         ch.data.datasets[1].data = monthComps;
-        ch.data.datasets[2].data = monthCumDiffs;
+        ch.data.datasets[2].label = lineDatasetLabel;
+        ch.data.datasets[2].data = linePlottedValues;
+        ch.data.datasets[2].displayValues = lineActualValues;
+        ch.data.datasets[2].isBarHeadAnchored = isBarHeadAnchored;
+        ch.data.datasets[2].yAxisID = lineAxisId;
+        ch.options.layout = { padding: { top: 22, right: 6, bottom: 2, left: 4 } };
+        ch.options.scales = monthlyScalesConfig;
+        ch.options.plugins.tooltip.callbacks.label = (ctx) => {
+          if (ctx.datasetIndex === 2) {
+            const actualArr = ctx.dataset.displayValues || ctx.dataset.data || [];
+            const val = Number(actualArr[ctx.dataIndex]) || 0;
+            return `${ctx.dataset.label}: ${val > 0 ? '+' : ''}${Utils.formatCurrency(val)} บาท`;
+          }
+          return `${ctx.dataset.label}: ${Utils.formatCurrency(ctx.parsed.y)} บาท`;
+        };
+        ch.options.plugins.tooltip.callbacks.afterBody = (items) => {
+          const idx = items[0]?.dataIndex;
+          if (idx === undefined || !sortedMonths[idx]) return '';
+          const m = sortedMonths[idx];
+          return [
+            `จำนวนผู้รับบริการ: ${Utils.formatInt(m.count)} ราย`,
+            `ส่วนต่างประจำเดือน: ${m.diff >= 0 ? '+' : ''}${Utils.formatCurrency(m.diff)} บาท`,
+            `ส่วนต่างสะสมถึงเดือนนี้: ${monthCumDiffs[idx] >= 0 ? '+' : ''}${Utils.formatCurrency(monthCumDiffs[idx])} บาท`
+          ];
+        };
         ch.update();
       } else {
         AppState.charts.monthlyMixed = new Chart(ctxMonthly, {
@@ -2516,30 +2793,50 @@
                 type: 'bar',
                 label: 'ยอดตั้งลูกหนี้ (บาท)',
                 data: monthDebits,
-                backgroundColor: '#C4B5FD',
-                borderRadius: 8,
-                barPercentage: 0.72,
+                yAxisID: 'y',
+                backgroundColor: violetGrad,
+                borderColor: '#8B5CF6',
+                borderWidth: 1,
+                borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+                borderSkipped: 'bottom',
+                categoryPercentage: 0.78,
+                barPercentage: 0.85,
                 order: 2
               },
               {
                 type: 'bar',
                 label: 'เงินชดเชยได้รับ (บาท)',
                 data: monthComps,
+                yAxisID: 'y',
                 backgroundColor: pinkGrad,
-                borderRadius: 8,
-                barPercentage: 0.72,
+                borderColor: '#DB2777',
+                borderWidth: 1,
+                borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+                borderSkipped: 'bottom',
+                categoryPercentage: 0.78,
+                barPercentage: 0.85,
                 order: 2
               },
               {
                 type: 'line',
-                label: 'ส่วนต่างสะสม (บาท)',
-                data: monthCumDiffs,
+                label: lineDatasetLabel,
+                data: linePlottedValues,
+                displayValues: lineActualValues,
+                isBarHeadAnchored: isBarHeadAnchored,
+                yAxisID: lineAxisId,
                 borderColor: '#9D174D',
-                backgroundColor: 'rgba(157, 23, 77, 0.12)',
+                backgroundColor: 'rgba(157, 23, 77, 0.10)',
                 borderWidth: 2.5,
-                pointBackgroundColor: '#9D174D',
-                pointRadius: 4,
-                tension: 0.3,
+                pointBackgroundColor: ctx => {
+                  const arr = ctx.dataset.displayValues || ctx.dataset.data || [];
+                  const v = Number(arr[ctx.dataIndex]);
+                  return v < 0 ? '#DC2626' : '#9D174D';
+                },
+                pointBorderColor: '#FFFFFF',
+                pointBorderWidth: 1.5,
+                pointRadius: 4.5,
+                pointHoverRadius: 6.5,
+                tension: 0.25,
                 order: 1
               }
             ]
@@ -2547,6 +2844,9 @@
           options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+              padding: { top: 22, right: 6, bottom: 2, left: 4 }
+            },
             interaction: { mode: 'index', intersect: false },
             onClick: (evt, elements) => {
               if (elements && elements.length > 0) {
@@ -2558,18 +2858,32 @@
               }
             },
             plugins: {
-              legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12 } }
-            },
-            scales: {
-              x: { grid: { display: false } },
-              y: {
-                beginAtZero: true,
-                grid: { color: 'rgba(244, 114, 182, 0.14)' },
-                ticks: {
-                  callback: val => Number(val).toLocaleString('th-TH')
+              valueLabels: { enabled: true },
+              legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14 } },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => {
+                    if (ctx.datasetIndex === 2) {
+                      const actualArr = ctx.dataset.displayValues || ctx.dataset.data || [];
+                      const val = Number(actualArr[ctx.dataIndex]) || 0;
+                      return `${ctx.dataset.label}: ${val > 0 ? '+' : ''}${Utils.formatCurrency(val)} บาท`;
+                    }
+                    return `${ctx.dataset.label}: ${Utils.formatCurrency(ctx.parsed.y)} บาท`;
+                  },
+                  afterBody: (items) => {
+                    const idx = items[0]?.dataIndex;
+                    if (idx === undefined || !sortedMonths[idx]) return '';
+                    const m = sortedMonths[idx];
+                    return [
+                      `จำนวนผู้รับบริการ: ${Utils.formatInt(m.count)} ราย`,
+                      `ส่วนต่างประจำเดือน: ${m.diff >= 0 ? '+' : ''}${Utils.formatCurrency(m.diff)} บาท`,
+                      `ส่วนต่างสะสมถึงเดือนนี้: ${monthCumDiffs[idx] >= 0 ? '+' : ''}${Utils.formatCurrency(monthCumDiffs[idx])} บาท`
+                    ];
+                  }
                 }
               }
-            }
+            },
+            scales: monthlyScalesConfig
           }
         });
       }
@@ -2647,6 +2961,7 @@
         return `#${r.seq} · HN ${hnMasked} (${nameMasked})`;
       });
       const top5Values = top5List.map(r => r[metricKey]);
+      const maxTop5Val = Math.max(...top5Values, 100);
 
       const ctxTop5 = document.getElementById('chartTop5Bar').getContext('2d');
       if (AppState.charts.top5Bar) {
@@ -2654,6 +2969,7 @@
         ch.data.labels = top5Labels;
         ch.data.datasets[0].label = hasNonZeroDiff ? 'ส่วนต่าง (บาท)' : 'เงินชดเชย (บาท)';
         ch.data.datasets[0].data = top5Values;
+        ch.options.scales.x.suggestedMax = Math.ceil((maxTop5Val * 1.22) / 50) * 50;
         ch.update();
       } else {
         AppState.charts.top5Bar = new Chart(ctxTop5, {
@@ -2664,8 +2980,13 @@
               label: hasNonZeroDiff ? 'ส่วนต่าง (บาท)' : 'เงินชดเชย (บาท)',
               data: top5Values,
               backgroundColor: ['#BE185D', '#EC4899', '#F472B6', '#F9A8D4', '#FDBA74'],
-              borderRadius: 8,
-              barThickness: 24
+              borderColor: ['#9D174D', '#BE185D', '#DB2777', '#EC4899', '#F59E0B'],
+              borderWidth: 1,
+              borderRadius: { topRight: 6, bottomRight: 6, topLeft: 0, bottomLeft: 0 },
+              borderSkipped: 'left',
+              categoryPercentage: 0.80,
+              barPercentage: 0.78,
+              maxBarThickness: 32
             }]
           },
           options: {
@@ -2673,11 +2994,13 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
+              valueLabels: { enabled: true },
               legend: { display: false }
             },
             scales: {
               x: {
                 beginAtZero: true,
+                suggestedMax: Math.ceil((maxTop5Val * 1.22) / 50) * 50,
                 grid: { color: 'rgba(244, 114, 182, 0.14)' },
                 ticks: { callback: val => Number(val).toLocaleString('th-TH') }
               },
@@ -2985,9 +3308,135 @@
       renderTableAndCards(filtered);
     }
 
+    // ดึงข้อมูลของแท็บในพื้นหลังเพื่อสร้างแคชและแสดงจำนวนรายการ (Count Badge) ของทุกหน้า
+    async function fetchSingleSheetInBackground(sheet) {
+      if (!sheet || !sheet.name) return;
+      const queryPart = (sheet.gid !== undefined && sheet.gid !== null && sheet.gid !== '')
+        ? `gid=${encodeURIComponent(sheet.gid)}`
+        : `sheet=${encodeURIComponent(sheet.name)}`;
+      const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/gviz/tq?tqx=out:csv&${queryPart}&_=${Date.now()}`;
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) return;
+        const csvText = await res.text();
+        if (csvText.trim().startsWith('<!DOCTYPE html') || csvText.includes('<html')) return;
+        const rawRows = Parser.parseCSV(csvText);
+        const structured = Parser.extractStructuredData(rawRows, sheet.name);
+        const newHash = structured.records.map(r => r.rowSignature).join('||');
+        const nowStr = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        AppState.sheetCache[sheet.name] = {
+          hash: newHash,
+          subtitle: structured.subtitle,
+          records: structured.records,
+          columnMap: structured.columnMap,
+          updatedAt: nowStr
+        };
+        renderSheetSelectors();
+      } catch (e) {
+        // ข้ามกรณีดึงข้อมูลพื้นหลังไม่สำเร็จ
+      }
+    }
+
+    function prefetchUncachedSheets() {
+      CONFIG.SHEETS.forEach((sheet, idx) => {
+        if (idx !== AppState.activeSheetIndex && !AppState.sheetCache[sheet.name]) {
+          fetchSingleSheetInBackground(sheet);
+        }
+      });
+    }
+
+    // ตรวจสอบการเพิ่ม / ลบ / เปลี่ยนชื่อ Sheet จากไฟล์ Google Sheets ต้นทางอัตโนมัติ (ไม่ใช้ API Key)
+    async function syncSheetsFromSource(notifyIfUnchanged = false) {
+      const htmlViewUrl = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/htmlview?_=${Date.now()}`;
+      try {
+        const res = await fetch(htmlViewUrl, { cache: 'no-store' });
+        if (!res.ok) return;
+        const htmlText = await res.text();
+
+        const discovered = [];
+        const seenGids = new Set();
+        const itemRegex = /items\.push\(\{\s*name:\s*"((?:[^"\\]|\\.)*)"[\s\S]*?gid:\s*"(-?\d+)"/g;
+        let match;
+
+        while ((match = itemRegex.exec(htmlText)) !== null) {
+          let rawName = match[1] || '';
+          try {
+            rawName = JSON.parse(`"${rawName}"`);
+          } catch (e) {
+            rawName = rawName.replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+          }
+          const cleanName = rawName.trim();
+          const gid = String(match[2] || '').trim();
+          if (cleanName && !seenGids.has(gid)) {
+            seenGids.add(gid);
+            discovered.push({ name: cleanName, gid });
+          }
+        }
+
+        if (discovered.length === 0) return;
+
+        const oldSourceSheets = CONFIG.SHEETS.filter(s => !s.isCustomLocal);
+        const customLocalSheets = CONFIG.SHEETS.filter(s => s.isCustomLocal && !discovered.some(d => d.name === s.name));
+
+        const oldNamesSet = new Set(oldSourceSheets.map(s => s.name));
+        const newNamesSet = new Set(discovered.map(s => s.name));
+
+        const addedSheets = discovered.filter(s => !oldNamesSet.has(s.name));
+        const removedSheets = oldSourceSheets.filter(s => !newNamesSet.has(s.name));
+        const isOrderOrGidChanged =
+          oldSourceSheets.length !== discovered.length ||
+          discovered.some((s, i) => oldSourceSheets[i]?.name !== s.name || String(oldSourceSheets[i]?.gid ?? '') !== String(s.gid));
+
+        if (addedSheets.length > 0 || removedSheets.length > 0 || isOrderOrGidChanged) {
+          const currentActiveName = CONFIG.SHEETS[AppState.activeSheetIndex]?.name;
+
+          // ลบแคชของแท็บที่ถูกลบออกจาก Google Sheets ต้นทาง
+          removedSheets.forEach(s => {
+            delete AppState.sheetCache[s.name];
+          });
+
+          CONFIG.SHEETS = [...discovered, ...customLocalSheets];
+
+          // รักษาแท็บที่กำลังเปิดดูอยู่ หรือหากแท็บนั้นถูกลบให้สลับไปยังแท็บที่เพิ่มเข้ามาใหม่หรือแท็บแรก
+          const preservedIdx = CONFIG.SHEETS.findIndex(s => s.name === currentActiveName);
+          let needSwitchFetch = false;
+          if (preservedIdx !== -1) {
+            AppState.activeSheetIndex = preservedIdx;
+          } else {
+            AppState.activeSheetIndex = 0;
+            needSwitchFetch = true;
+          }
+
+          renderSheetSelectors();
+
+          // ดึงข้อมูลของแท็บที่เพิ่งเพิ่มเข้ามาใหม่ทันทีเพื่อสร้างหน้าและแสดงจำนวนรายการ
+          addedSheets.forEach(s => fetchSingleSheetInBackground(s));
+
+          if (addedSheets.length > 0 && removedSheets.length > 0) {
+            showToast(`ซิงค์หน้าชีตอัตโนมัติ: เพิ่ม "${addedSheets.map(s => s.name).join(', ')}" · ลบ "${removedSheets.map(s => s.name).join(', ')}"`);
+          } else if (addedSheets.length > 0) {
+            showToast(`ตรวจพบ Sheet ใหม่จากต้นทาง: สร้างหน้า "${addedSheets.map(s => s.name).join(', ')}" เรียบร้อยแล้ว`);
+          } else if (removedSheets.length > 0) {
+            showToast(`ตรวจพบการลบ Sheet จากต้นทาง: นำหน้า "${removedSheets.map(s => s.name).join(', ')}" ออกแล้ว`);
+          }
+
+          if (needSwitchFetch) {
+            switchSheetTab(AppState.activeSheetIndex);
+          }
+        } else if (notifyIfUnchanged) {
+          showToast(`ซิงค์รายชื่อแท็บสำเร็จ: มีทั้งหมด ${CONFIG.SHEETS.length} แท็บตรงตาม Google Sheet ต้นทาง`);
+        }
+
+        prefetchUncachedSheets();
+      } catch (err) {
+        // กรณีออฟไลน์ให้ใช้รายชื่อแท็บล่าสุดที่มีอยู่
+      }
+    }
+
     // ดึงข้อมูล CSV จาก Google Sheets ของแท็บปัจจุบัน
     async function fetchActiveSheetData(isManual = false) {
-      const sheet = CONFIG.SHEETS[AppState.activeSheetIndex];
+      const sheet = CONFIG.SHEETS[AppState.activeSheetIndex] || CONFIG.SHEETS[0];
+      if (!sheet) return;
       const hasCached = Boolean(AppState.sheetCache[sheet.name]);
 
       if (!hasCached) {
@@ -2995,8 +3444,8 @@
       }
       setConnectionStatus('syncing', 'กำลังดึงข้อมูล...');
 
-      const queryPart = (sheet.gid !== undefined && AppState.activeSheetIndex === 0)
-        ? `gid=${sheet.gid}`
+      const queryPart = (sheet.gid !== undefined && sheet.gid !== null && sheet.gid !== '')
+        ? `gid=${encodeURIComponent(sheet.gid)}`
         : `sheet=${encodeURIComponent(sheet.name)}`;
       const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/gviz/tq?tqx=out:csv&${queryPart}&_=${Date.now()}`;
 
@@ -3173,7 +3622,7 @@
       }
     }
 
-    // ตั้งค่าระบบ Polling อัตโนมัติ
+    // ตั้งค่าระบบ Polling อัตโนมัติ (ดึงทั้งข้อมูลในแท็บปัจจุบัน และตรวจสอบการเพิ่ม/ลบแท็บจาก Google Sheets ต้นทาง)
     function setupPollingTimer() {
       if (AppState.pollTimerId) {
         clearInterval(AppState.pollTimerId);
@@ -3182,6 +3631,7 @@
       if (AppState.pollIntervalMs > 0) {
         AppState.pollTimerId = setInterval(() => {
           if (document.visibilityState === 'visible') {
+            syncSheetsFromSource(false);
             fetchActiveSheetData(false);
           }
         }, AppState.pollIntervalMs);
@@ -3230,11 +3680,13 @@
 
     // ผูกเหตุการณ์ปุ่มกดและตัวกรองทั้งหมด
     function initEventListeners() {
-      // ปุ่มรีเฟรชด้วยมือ
+      // ปุ่มรีเฟรชด้วยมือ (ซิงค์ทั้งรายชื่อแท็บใหม่และข้อมูลแท็บปัจจุบัน)
       document.getElementById('btnManualRefresh').addEventListener('click', () => {
+        syncSheetsFromSource(false);
         fetchActiveSheetData(true);
       });
       document.getElementById('btnRetryNow').addEventListener('click', () => {
+        syncSheetsFromSource(false);
         fetchActiveSheetData(true);
       });
 
@@ -3265,6 +3717,15 @@
       document.getElementById('quickSheetSelect').addEventListener('change', (e) => {
         switchSheetTab(parseInt(e.target.value, 10));
       });
+
+      // สลับโหมดสเกลกราฟผสมรายเดือน
+      const scaleSelectEl = document.getElementById('monthlyChartScaleSelect');
+      if (scaleSelectEl) {
+        scaleSelectEl.addEventListener('change', (e) => {
+          AppState.monthlyScaleMode = e.target.value;
+          renderCharts(getFilteredRecords());
+        });
+      }
 
       // สลับมุมมองจาก Sidebar และ Bottom Nav
       document.querySelectorAll('[data-view]').forEach(btn => {
@@ -3363,18 +3824,21 @@
         }, 3000);
       });
 
-      // ปุ่มเพิ่มแท็บชีตใหม่ในหน้าตั้งค่า
-      document.getElementById('btnAddCustomTab').addEventListener('click', () => {
+      // ปุ่มเพิ่มหรือซิงค์แท็บชีตใหม่ในหน้าตั้งค่า
+      document.getElementById('btnAddCustomTab').addEventListener('click', async () => {
         const input = document.getElementById('newTabNameInput');
         const name = input.value.trim();
-        if (!name) return;
+        if (!name) {
+          await syncSheetsFromSource(true);
+          return;
+        }
         const existsIdx = CONFIG.SHEETS.findIndex(s => s.name === name);
         if (existsIdx !== -1) {
           switchSheetTab(existsIdx);
           switchMainView('overview');
           return;
         }
-        CONFIG.SHEETS.push({ name });
+        CONFIG.SHEETS.push({ name, isCustomLocal: true });
         input.value = '';
         renderSheetSelectors();
         switchSheetTab(CONFIG.SHEETS.length - 1);
@@ -3397,9 +3861,10 @@
         showToast('ดาวน์โหลดไฟล์ index.html เรียบร้อยแล้ว');
       });
 
-      // ดึงข้อมูลทันทีเมื่อผู้ใช้สลับกลับมาที่แท็บเบราว์เซอร์
+      // ดึงข้อมูลและตรวจสอบแท็บใหม่ทันทีเมื่อผู้ใช้สลับกลับมาที่แท็บเบราว์เซอร์
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
+          syncSheetsFromSource(false);
           fetchActiveSheetData(false);
         }
       });
@@ -3414,6 +3879,7 @@
       renderSheetSelectors();
       initEventListeners();
       fetchActiveSheetData(false);
+      syncSheetsFromSource(false);
       setupPollingTimer();
     }
 
