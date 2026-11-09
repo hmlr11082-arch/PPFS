@@ -1,0 +1,6 @@
+{
+  "name": "Dashboard ทะเบียนคุมลูกหนี้ PPFS 2569 - โรงพยาบาลท่าคันโท",
+  "description": "ระบบ Dashboard ทะเบียนคุมลูกหนี้ บริการสร้างเสริมสุขภาพและป้องกันโรค (PPFS 2569) โรงพยาบาลท่าคันโท เชื่อมต่อข้อมูล Google Sheets แบบเรียลไทม์",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
